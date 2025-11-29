@@ -18,6 +18,5 @@ debian/*
 .flatpak-version
 build-dir
 repo
-cargo-sources.json
 flatpak-cargo-generator.py
 *.flatpak
