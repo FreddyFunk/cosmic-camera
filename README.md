@@ -18,8 +18,10 @@ This is a personal project by [Frederic Laing](https://github.com/FreddyFunk). I
 
 ### Flatpak (Recommended)
 
+<a href='https://flathub.org/apps/io.github.freddyfunk.cosmic-camera'><img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?svg&locale=en'/></a>
+
 ```bash
-# Install from Flathub (when available)
+# Install from Flathub
 flatpak install flathub io.github.freddyfunk.cosmic-camera
 
 # Or install from a downloaded .flatpak bundle
