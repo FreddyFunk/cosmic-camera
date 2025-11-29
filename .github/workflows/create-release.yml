@@ -184,22 +184,33 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
 
-      - name: Commit metainfo changes
+      - name: Install Python dependencies
+        run: pip install aiohttp toml
+
+      - name: Generate cargo-sources.json for Flathub
+        run: |
+          curl -sLo flatpak-cargo-generator.py https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/cargo/flatpak-cargo-generator.py
+          python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
+          rm flatpak-cargo-generator.py
+          echo "📦 Generated cargo-sources.json for Flathub"
+
+      - name: Commit release changes
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add resources/io.github.freddyfunk.cosmic-camera.metainfo.xml
+          git add cargo-sources.json
 
           if git diff --staged --quiet; then
-            echo "No changes to metainfo.xml"
+            echo "No changes to commit"
             COMMIT_SHA="${{ github.sha }}"
           else
             git commit -m "Release ${{ steps.version.outputs.tag }}: update metainfo.xml"
             git push origin ${{ github.ref_name }}
             COMMIT_SHA=$(git rev-parse HEAD)
-            echo "📝 Committed metainfo changes: $COMMIT_SHA"
+            echo "📝 Committed release changes: $COMMIT_SHA"
           fi
 
           echo "sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
