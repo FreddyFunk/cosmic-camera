@@ -64,6 +64,20 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.1.10" date="2025-11-29">
+      <description>
+        <p>Release 0.1.10 includes the following changes:</p>
+        <ul>
+          <li>deps(actions): bump actions/checkout from 4 to 6</li>
+          <li>deps(actions): bump extractions/setup-just from 2 to 3</li>
+          <li>deps(actions): bump actions/download-artifact from 4 to 6</li>
+          <li>deps(actions): bump actions/upload-artifact from 4 to 5</li>
+          <li>deps(cargo): bump the rust-dependencies group with 2 updates</li>
+          <li>deps(cargo): bump libcosmic from `639326f` to `62f661e`</li>
+          <li>let virtual camera use image or video file as source</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.9" date="2025-11-29">
       <description>
         <p>Release 0.1.9 includes the following changes:</p>
