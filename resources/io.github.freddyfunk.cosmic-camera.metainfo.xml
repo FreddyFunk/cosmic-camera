@@ -64,6 +64,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.1.9" date="2025-11-29">
+      <description>
+        <p>Release 0.1.9 includes the following changes:</p>
+        <ul>
+          <li>refactor flathub release workflow</li>
+          <li>automatically check for dependency updates</li>
+          <li>add nice flathub banner to readme</li>
+          <li>refactor flathub release workflow</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.8" date="2025-11-29">
       <description>
         <p>Release 0.1.8 includes the following changes:</p>
