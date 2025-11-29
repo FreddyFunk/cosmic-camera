@@ -65,7 +65,7 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       - name: Build release binary
         run: |
@@ -110,7 +110,7 @@ jobs:
         run: sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       - name: Install Flatpak dependencies
         run: just flatpak-deps x86_64
@@ -156,7 +156,7 @@ jobs:
         run: sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       - name: Install Flatpak dependencies
         run: just flatpak-deps aarch64
