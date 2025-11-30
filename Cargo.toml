@@ -33,6 +33,9 @@ rqrr = "0.10.0"
 rfd = "0.15"
 zbus = "5.12.0"
 uuid = { version = "1.18.1", features = ["v4"] }
+clap = { version = "4.5", features = ["derive"] }
+ratatui = "0.29"
+crossterm = "0.28"
 
 [dependencies.libcosmic]
 git = "https://github.com/pop-os/libcosmic.git"

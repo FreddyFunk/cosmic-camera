@@ -35,6 +35,7 @@ pub mod network_manager;
 pub mod pipelines;
 pub mod shaders;
 pub mod storage;
+pub mod terminal;
 
 // Re-export commonly used types
 pub use app::frame_processor::{QrAction, QrDetection};
