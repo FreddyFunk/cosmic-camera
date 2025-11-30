@@ -53,6 +53,28 @@ just build-release
 sudo just install
 ```
 
+## Terminal Mode (For the Brave)
+
+Ever wanted to see your face rendered in glorious Unicode? Wonder what you'd look like as a half-block character? Well, wonder no more!
+
+```bash
+cosmic-camera --terminal
+```
+
+![Terminal Mode Demo](preview/preview-terminal-demo.gif)
+
+**Controls:**
+- `s` - Switch camera (cycle through available cameras)
+- `q` or `Ctrl+C` - Return to the real world
+
+**Why does this exist?**
+- SSH into your server and check if you left the oven on (assuming your oven has a camera)
+- Finally achieve your dream of becoming ASCII art
+- Prove to your coworkers that you *can* attend video calls from a TTY
+- Because we could
+
+**Note:** Your terminal needs true color support (most modern terminals have this). If you see a sad mosaic of wrong colors, try a different terminal emulator. Also, this won't make you more photogenic - trust us, we tried.
+
 ## Development
 
 ```bash
