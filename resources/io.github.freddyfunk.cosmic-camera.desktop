@@ -2,7 +2,7 @@
 Type=Application
 Name=COSMIC Camera
 GenericName=Camera
-Comment=Take photos and videos with your camera
+Comment=Third-party camera app for the COSMIC™ desktop
 Icon=io.github.freddyfunk.cosmic-camera
 Exec=cosmic-camera
 Terminal=false
