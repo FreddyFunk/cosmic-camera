@@ -64,6 +64,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.1.12" date="2025-12-01">
+      <description>
+        <p>Release 0.1.12 includes the following changes:</p>
+        <ul>
+          <li>better about page</li>
+          <li>adapt settings page to other COSMIC apps</li>
+          <li>improve UX/UI for filter preview and filter selection</li>
+          <li>rename "Report a bug" button to "Report bug"</li>
+          <li>improve resolution and framrate picker UI when using light theme mode</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.11" date="2025-11-30">
       <description>
         <p>Release 0.1.11 includes the following changes:</p>
