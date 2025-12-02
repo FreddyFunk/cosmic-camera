@@ -33,8 +33,15 @@ impl AppModel {
             .position(|p| *p == self.config.bitrate_preset)
             .unwrap_or(1); // Default to Medium (index 1)
 
-        // Camera section
-        let camera_section = widget::settings::section()
+        // Current backend index for dropdown (find in available backends list)
+        let current_backend_index = self
+            .available_backends
+            .iter()
+            .position(|b| *b == self.config.backend)
+            .unwrap_or(0);
+
+        // Camera section - conditionally add backend dropdown only if multiple backends available
+        let mut camera_section = widget::settings::section()
             .title(fl!("settings-camera"))
             .add(
                 widget::settings::item::builder(fl!("settings-device")).control(widget::dropdown(
@@ -50,6 +57,19 @@ impl AppModel {
                     Message::SelectMode,
                 )),
             );
+
+        // Only show backend dropdown if multiple backends are available
+        if self.available_backends.len() > 1 {
+            camera_section = camera_section.add(
+                widget::settings::item::builder(fl!("settings-backend"))
+                    .description(fl!("settings-backend-description"))
+                    .control(widget::dropdown(
+                        &self.backend_dropdown_options,
+                        Some(current_backend_index),
+                        Message::SelectBackend,
+                    )),
+            );
+        }
 
         // Video section
         let video_section = widget::settings::section()
