@@ -377,6 +377,23 @@ impl cosmic::Application for AppModel {
         })
     }
 
+    /// Handle escape key - close any open drawers or pickers
+    fn on_escape(&mut self) -> Task<cosmic::Action<Self::Message>> {
+        // Close format picker if open
+        if self.format_picker_visible {
+            self.format_picker_visible = false;
+            return Task::none();
+        }
+
+        // Close context drawer if open (about, settings, filters)
+        if self.core.window.show_context {
+            self.core.window.show_context = false;
+            return Task::none();
+        }
+
+        Task::none()
+    }
+
     /// Describes the interface based on the current state of the application model.
     fn view(&self) -> Element<'_, Self::Message> {
         self.view()
