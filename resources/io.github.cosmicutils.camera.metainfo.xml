@@ -64,6 +64,20 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.1.15" date="2025-12-03">
+      <description>
+        <p>Release 0.1.15 includes the following changes:</p>
+        <ul>
+          <li>remove version number from settings page since it's alreary present in the about page</li>
+          <li>let the all resolution/framerate picker and all drawers (about, settings, filter) be closable with the escape key</li>
+          <li>more alignment with coscmic style and theme</li>
+          <li>deps(cargo): bump the rust-dependencies group with 4 updates</li>
+          <li>add photo/video capture support for cli interface</li>
+          <li>add armv7 support</li>
+          <li>improve app icon</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.14" date="2025-12-01">
       <description>
         <p>Release 0.1.14 includes the following changes:</p>
