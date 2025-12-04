@@ -15,6 +15,12 @@ mod cli;
 struct Cli {
     #[command(subcommand)]
     command: Option<Commands>,
+
+    /// Use an image or video file as the camera preview source instead of a real camera.
+    /// Useful for testing, demos, or taking screenshots with consistent content.
+    /// Supported formats: PNG, JPG, JPEG, WEBP (images) or MP4, WEBM, MKV (videos)
+    #[arg(long, value_name = "FILE")]
+    preview_source: Option<PathBuf>,
 }
 
 #[derive(Subcommand)]
@@ -81,11 +87,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             output,
             audio,
         }) => cli::record_video(camera, duration, output, audio),
-        None => run_gui(),
+        None => run_gui(cli.preview_source),
     }
 }
 
-fn run_gui() -> Result<(), Box<dyn std::error::Error>> {
+fn run_gui(preview_source: Option<PathBuf>) -> Result<(), Box<dyn std::error::Error>> {
     // Get the system's preferred languages.
     let requested_languages = i18n_embed::DesktopLanguageRequester::requested_languages();
 
@@ -93,14 +99,23 @@ fn run_gui() -> Result<(), Box<dyn std::error::Error>> {
     i18n::init(&requested_languages);
 
     // Settings for configuring the application window and iced runtime.
-    let settings = cosmic::app::Settings::default().size_limits(
+    let mut settings = cosmic::app::Settings::default().size_limits(
         cosmic::iced::Limits::NONE
             .min_width(360.0)
             .min_height(180.0),
     );
 
-    // Starts the application's event loop with `()` as the application's flags.
-    cosmic::app::run::<AppModel>(settings, ())?;
+    // When preview source is provided, set optimal window size for Flathub screenshots
+    // Flathub recommends 1000x700 or smaller for standard displays
+    if preview_source.is_some() {
+        settings = settings.size(cosmic::iced::Size::new(900.0, 700.0));
+    }
+
+    // Create app flags with optional preview source
+    let flags = camera::app::AppFlags { preview_source };
+
+    // Starts the application's event loop with flags
+    cosmic::app::run::<AppModel>(settings, flags)?;
 
     Ok(())
 }

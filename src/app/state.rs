@@ -396,6 +396,16 @@ pub enum FileSource {
     Video(std::path::PathBuf),
 }
 
+/// Application initialization flags
+///
+/// These are passed from the command line to configure the app on startup.
+#[derive(Debug, Clone, Default)]
+pub struct AppFlags {
+    /// Optional file to use as the camera preview source instead of a real camera.
+    /// Can be an image (PNG, JPG, JPEG, WEBP) or video (MP4, WEBM, MKV).
+    pub preview_source: Option<std::path::PathBuf>,
+}
+
 /// Commands for controlling video file playback
 #[derive(Debug, Clone)]
 pub enum VideoPlaybackCommand {

@@ -54,8 +54,8 @@ use cosmic::iced::Subscription;
 use cosmic::widget::{self, about::About};
 use cosmic::{Element, Task};
 pub use state::{
-    AppModel, CameraMode, ContextPage, FilterType, Message, RecordingState, TheatreState,
-    VirtualCameraState,
+    AppFlags, AppModel, CameraMode, ContextPage, FileSource, FilterType, Message, RecordingState,
+    TheatreState, VirtualCameraState,
 };
 use std::sync::Arc;
 use tracing::{error, info, warn};
@@ -85,7 +85,7 @@ impl cosmic::Application for AppModel {
     type Executor = cosmic::executor::Default;
 
     /// Data that your application receives to its init method.
-    type Flags = ();
+    type Flags = AppFlags;
 
     /// Messages which the application and its widgets will emit.
     type Message = Message;
@@ -102,10 +102,7 @@ impl cosmic::Application for AppModel {
     }
 
     /// Initializes the application with any given flags and startup commands.
-    fn init(
-        core: cosmic::Core,
-        _flags: Self::Flags,
-    ) -> (Self, Task<cosmic::Action<Self::Message>>) {
+    fn init(core: cosmic::Core, flags: Self::Flags) -> (Self, Task<cosmic::Action<Self::Message>>) {
         // Create the about widget
         let about = About::default()
             .name(fl!("app-title"))
@@ -194,6 +191,33 @@ impl cosmic::Application for AppModel {
         // Create backend manager
         let backend_manager = crate::backends::camera::CameraBackendManager::new(config.backend);
 
+        // Convert preview source path to FileSource if provided
+        let preview_file_source = flags.preview_source.and_then(|path| {
+            if !path.exists() {
+                error!(path = %path.display(), "Preview source file not found");
+                return None;
+            }
+            let ext = path
+                .extension()
+                .and_then(|e| e.to_str())
+                .map(|e| e.to_lowercase());
+            match ext.as_deref() {
+                Some("png" | "jpg" | "jpeg" | "webp" | "bmp" | "gif") => {
+                    info!(path = %path.display(), "Using image as preview source");
+                    Some(FileSource::Image(path))
+                }
+                Some("mp4" | "webm" | "mkv" | "avi" | "mov") => {
+                    info!(path = %path.display(), "Using video as preview source");
+                    Some(FileSource::Video(path))
+                }
+                _ => {
+                    warn!(path = %path.display(), "Unknown file extension for preview source, treating as image");
+                    Some(FileSource::Image(path))
+                }
+            }
+        });
+        let has_preview_source = preview_file_source.is_some();
+
         // Construct the app model with the runtime's core.
         let mut app = AppModel {
             core,
@@ -204,8 +228,8 @@ impl cosmic::Application for AppModel {
             mode: CameraMode::Photo,
             recording: RecordingState::default(),
             virtual_camera: VirtualCameraState::default(),
-            virtual_camera_file_source: None,
-            current_frame_is_file_source: false,
+            virtual_camera_file_source: preview_file_source,
+            current_frame_is_file_source: has_preview_source,
             video_file_progress: None,
             video_preview_seek_position: 0.0,
             video_file_paused: false,
@@ -321,7 +345,20 @@ impl cosmic::Application for AppModel {
             |handle| cosmic::Action::App(Message::GalleryThumbnailLoaded(handle)),
         );
 
-        (app, Task::batch([init_task, load_thumbnail_task]))
+        // If a preview source was provided via CLI, trigger loading it
+        let preview_source_task = if let Some(ref source) = app.virtual_camera_file_source {
+            let source_clone = source.clone();
+            Task::done(cosmic::Action::App(Message::VirtualCameraFileSelected(
+                Some(source_clone),
+            )))
+        } else {
+            Task::none()
+        };
+
+        (
+            app,
+            Task::batch([init_task, load_thumbnail_task, preview_source_task]),
+        )
     }
 
     /// Elements to pack at the start of the header bar.
@@ -430,9 +467,9 @@ impl cosmic::Application for AppModel {
         // This ensures the subscription restarts when cameras become available
         let cameras_initialized = !self.available_cameras.is_empty();
 
-        // Check if file source is active in Virtual mode - if so, don't run camera subscription
-        let file_source_active =
-            self.mode == CameraMode::Virtual && self.virtual_camera_file_source.is_some();
+        // Check if file source is active - if so, don't run camera subscription
+        // This applies in Virtual mode OR when --preview-source was used (any mode)
+        let file_source_active = self.virtual_camera_file_source.is_some();
 
         let camera_sub = if file_source_active {
             // No camera subscription when file source is active (file source handles preview)
