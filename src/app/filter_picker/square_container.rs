@@ -5,7 +5,7 @@
 //! Enforces 1:1 aspect ratio by setting height = available width in layout.
 
 use cosmic::iced::advanced::widget::Tree;
-use cosmic::iced::advanced::{layout, Widget};
+use cosmic::iced::advanced::{Widget, layout};
 use cosmic::iced::{Element, Length, Rectangle, Size};
 use cosmic::{Renderer, Theme};
 
@@ -46,10 +46,10 @@ impl<'a, Message> Widget<Message, Theme, Renderer> for SquareContainer<'a, Messa
         let square_limits = layout::Limits::new(Size::ZERO, square_size);
 
         // Layout child within square bounds
-        let mut child_node = self
-            .content
-            .as_widget()
-            .layout(&mut tree.children[0], renderer, &square_limits);
+        let mut child_node =
+            self.content
+                .as_widget()
+                .layout(&mut tree.children[0], renderer, &square_limits);
 
         // Center the child within the square if it's smaller
         let child_size = child_node.size();
@@ -145,9 +145,7 @@ impl<'a, Message> Widget<Message, Theme, Renderer> for SquareContainer<'a, Messa
     }
 }
 
-impl<'a, Message: 'a> From<SquareContainer<'a, Message>>
-    for Element<'a, Message, Theme, Renderer>
-{
+impl<'a, Message: 'a> From<SquareContainer<'a, Message>> for Element<'a, Message, Theme, Renderer> {
     fn from(container: SquareContainer<'a, Message>) -> Self {
         Element::new(container)
     }
