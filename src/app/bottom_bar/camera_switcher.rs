@@ -3,6 +3,7 @@
 //! Camera switcher button widget implementation
 
 use crate::app::state::{AppModel, Message};
+use crate::app::view::overlay_container_style;
 use crate::constants::ui;
 use cosmic::Element;
 use cosmic::iced::Length;
@@ -31,36 +32,29 @@ impl AppModel {
         if self.available_cameras.len() > 1 {
             let switch_icon = widget::icon::from_svg_bytes(CAMERA_SWITCH_ICON).symbolic(true);
 
-            // Create icon container centered in 52x52 space
-            let icon_content = widget::container(widget::icon(switch_icon).size(28))
+            // Create icon widget that inherits theme colors
+            let icon_widget = widget::icon(switch_icon).size(32);
+
+            // Center icon in fixed-size container
+            let icon_content = widget::container(icon_widget)
                 .width(Length::Fixed(52.0))
                 .height(Length::Fixed(52.0))
-                .center(52.0);
+                .center(Length::Fixed(52.0));
 
-            // Create round button larger than gallery button for easy tapping
+            // Use custom button with icon as content - matches top bar overlay_icon_button pattern
+            // Use Button::Text for theme-aware styling (transparent background, themed icon color)
             let mut btn = widget::button::custom(icon_content)
                 .padding(0)
-                .width(Length::Fixed(52.0))
-                .height(Length::Fixed(52.0))
-                .class(cosmic::theme::Button::Icon);
+                .class(cosmic::theme::Button::Text);
 
             if !is_disabled {
                 btn = btn.on_press(Message::SwitchCamera);
             }
 
-            let button_element: Element<'_, Message> = btn.into();
-
-            if is_disabled {
-                // Wrap in container with reduced opacity when disabled
-                widget::container(button_element)
-                    .style(|_theme| widget::container::Style {
-                        text_color: Some(cosmic::iced::Color::from_rgba(1.0, 1.0, 1.0, 0.3)),
-                        ..Default::default()
-                    })
-                    .into()
-            } else {
-                button_element
-            }
+            // Wrap in container with themed background for better visibility on camera preview
+            widget::container(btn)
+                .style(overlay_container_style)
+                .into()
         } else {
             // Add invisible placeholder with same width as icon button
             widget::Space::new(Length::Fixed(ui::PLACEHOLDER_BUTTON_WIDTH), Length::Shrink).into()
