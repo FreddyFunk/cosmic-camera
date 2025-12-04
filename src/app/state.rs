@@ -348,6 +348,10 @@ pub struct AppModel {
     pub codec_dropdown_options: Vec<String>,
     /// Bitrate preset dropdown options
     pub bitrate_preset_dropdown_options: Vec<String>,
+    /// Backend dropdown options
+    pub backend_dropdown_options: Vec<String>,
+    /// Available backend types (corresponding to dropdown options)
+    pub available_backends: Vec<crate::backends::camera::CameraBackendType>,
     /// Whether the bitrate info matrix is visible
     pub bitrate_info_visible: bool,
 
@@ -599,6 +603,8 @@ pub enum Message {
     SelectAudioDevice(usize),
     /// Select video encoder
     SelectVideoEncoder(usize),
+    /// Select camera backend
+    SelectBackend(usize),
     /// Toggle virtual camera feature enabled
     ToggleVirtualCameraEnabled,
 
