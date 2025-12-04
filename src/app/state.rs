@@ -348,6 +348,8 @@ pub struct AppModel {
     pub codec_dropdown_options: Vec<String>,
     /// Bitrate preset dropdown options
     pub bitrate_preset_dropdown_options: Vec<String>,
+    /// Virtual camera output dropdown options (with availability indicators)
+    pub virtual_camera_output_dropdown_options: Vec<String>,
     /// Whether the bitrate info matrix is visible
     pub bitrate_info_visible: bool,
 
@@ -601,6 +603,8 @@ pub enum Message {
     SelectVideoEncoder(usize),
     /// Toggle virtual camera feature enabled
     ToggleVirtualCameraEnabled,
+    /// Select virtual camera output device type
+    SelectVirtualCameraOutput(usize),
 
     // ===== System & Recovery =====
     /// Camera backend recovery started

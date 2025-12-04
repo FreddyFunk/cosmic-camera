@@ -247,6 +247,16 @@ impl cosmic::Application for AppModel {
                 .iter()
                 .map(|p| p.display_name().to_string())
                 .collect(),
+            virtual_camera_output_dropdown_options: crate::constants::VirtualCameraOutput::ALL
+                .iter()
+                .map(|o| {
+                    if o.is_available() {
+                        o.display_name().to_string()
+                    } else {
+                        format!("{} (unavailable)", o.display_name())
+                    }
+                })
+                .collect(),
             bitrate_info_visible: false,
             transition_state: crate::app::state::TransitionState::default(),
             // QR detection enabled by default

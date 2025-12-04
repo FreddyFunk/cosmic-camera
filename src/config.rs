@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use crate::constants::BitratePreset;
+use crate::constants::{BitratePreset, VirtualCameraOutput};
 use cosmic::cosmic_config::{self, CosmicConfigEntry, cosmic_config_derive::CosmicConfigEntry};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -22,7 +22,7 @@ pub struct FormatSettings {
 pub type VideoSettings = FormatSettings;
 
 #[derive(Debug, Clone, CosmicConfigEntry, Eq, PartialEq, Serialize, Deserialize)]
-#[version = 5]
+#[version = 6]
 pub struct Config {
     /// Last used camera device path
     pub last_camera_path: Option<String>,
@@ -42,6 +42,8 @@ pub struct Config {
     pub bitrate_preset: BitratePreset,
     /// Virtual camera feature enabled (disabled by default)
     pub virtual_camera_enabled: bool,
+    /// Virtual camera output device type (PipeWire or V4L2Loopback)
+    pub virtual_camera_output: VirtualCameraOutput,
 }
 
 impl Default for Config {
@@ -58,6 +60,7 @@ impl Default for Config {
             mirror_preview: true, // Default to mirrored (selfie mode)
             bitrate_preset: BitratePreset::default(), // Default to Medium
             virtual_camera_enabled: false, // Disabled by default
+            virtual_camera_output: VirtualCameraOutput::default(), // Default to PipeWire
         }
     }
 }
